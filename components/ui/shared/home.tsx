@@ -86,7 +86,7 @@ export default function LandingPage() {
                 Contact
               </Link>
               
-              <a href="/sign-up"><Button className="mt-4" variant="default">
+              <a href="https://google.com/"><Button className="mt-4" variant="default">
                 Get Started
               </Button></a>
             </nav>

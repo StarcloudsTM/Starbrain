@@ -1,8 +1,6 @@
 'use client'
 
 import { UserButton } from "@clerk/nextjs";
-import { Bell } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 export function Header() {
   return (

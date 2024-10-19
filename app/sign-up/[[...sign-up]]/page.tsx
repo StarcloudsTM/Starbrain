@@ -1,18 +1,17 @@
 "use client";
-import Link from "next/link";
+
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSignUp } from "@clerk/nextjs";
 import SignupForm from "@/components/ui/shared/SignupForm";
 import VerifyForm from "@/components/ui/shared/VerifyForm";
 
-
 const Signup = () => {
-  const {isLoaded, signUp, setActive} = useSignUp();
-  const [clerkError, setClerkError] = useState("");
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const [clerkError, setClerkError] = useState<string>("");
   const router = useRouter();
-  const [verifying, setVerifying] = useState(false);
-  const [code, setCode] = useState("");
+  const [verifying, setVerifying] = useState<boolean>(false);
+  const [code, setCode] = useState<string>("");
 
   const signUpWithEmail = async ({
     emailAddress,
@@ -20,7 +19,7 @@ const Signup = () => {
   }: {
     emailAddress: string;
     password: string;
-  }) => {
+  }): Promise<void> => {
     if (!isLoaded) {
       return;
     }
@@ -30,17 +29,19 @@ const Signup = () => {
         emailAddress,
         password,
       });
-      // send the email.
-      await signUp.prepareEmailAddressVerification({strategy: "email_code"});
-
-      // change the UI to our pending section.
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setVerifying(true);
-    } catch (err: any) {
-      setClerkError(err.errors[0].message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setClerkError(err.message);
+      } else {
+        setClerkError("An unexpected error occurred.");
+      }
     }
   };
 
-  const handleVerify = async (e: FormEvent) => {
+  // Change to more generic type
+  const handleVerify = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     if (!isLoaded) return;
 
@@ -53,24 +54,27 @@ const Signup = () => {
       }
 
       if (completeSignUp.status === "complete") {
-        await setActive({session: completeSignUp.createdSessionId});
+        await setActive({ session: completeSignUp.createdSessionId });
         router.push("/");
       }
     } catch (err) {
-      console.log("Error:", JSON.stringify(err, null, 2));
+      if (err instanceof Error) {
+        console.log("Error:", err.message);
+      } else {
+        console.log("Error: An unexpected error occurred.");
+      }
     }
   };
 
   return (
     <>
-      
-      {!verifying ? 
-        (<SignupForm signUpWithEmail={signUpWithEmail} clerkError={clerkError} />) : 
-        (<VerifyForm handleVerify={handleVerify} code={code} setCode={setCode} />)
-      }
+      {!verifying ? (
+        <SignupForm signUpWithEmail={signUpWithEmail} clerkError={clerkError} />
+      ) : (
+        <VerifyForm handleVerify={handleVerify} code={code} setCode={setCode} />
+      )}
     </>
-  )
-      
+  );
 };
 
 export default Signup;
