@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Home, ShoppingBag, Settings, Menu, X } from 'lucide-react'
+import { Home, ShoppingBag, Settings, Menu, X,  } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export function Sidebar() {
@@ -26,16 +26,19 @@ export function Sidebar() {
         </div>
         <nav className="mt-6">
           <Link href="/dashboard" className="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
-            <Home className="h-5 w-5 mr-3" />
-            <span>Home</span>
+                        <span>Home</span>
+          </Link>
+          <Link href="/dashboard/dataset" className="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
+                        <span>Datasets</span>
+          </Link>
+          <Link href="/dashboard/projects" className="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
+                        <span>Projects</span>
           </Link>
           <Link href="/dashboard/upgrade" className="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
-            <ShoppingBag className="h-5 w-5 mr-3" />
-            <span>Upgrade</span>
+                        <span>Upgrade</span>
           </Link>
           <Link href="/dashboard/settings" className="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100">
-            <Settings className="h-5 w-5 mr-3" />
-            <span>Settings</span>
+                        <span>Settings</span>
           </Link>
         </nav>
       </div>

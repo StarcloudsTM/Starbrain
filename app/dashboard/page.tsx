@@ -10,8 +10,7 @@ export default function DashboardHome() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">BrainsPY</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
+                      </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">Python Code Snippet</div>
             <p className="text-xs text-muted-foreground">100+ Python Backend + Data Science Codes </p>
@@ -21,24 +20,22 @@ export default function DashboardHome() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">MLCluster</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
+            <CardTitle className="text-sm font-medium">Projects</CardTitle>
+                      </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">50+ Machine Learing Models</div>
-            <p className="text-xs text-muted-foreground">50+ Machine Learing Model With 12 APIs</p>
-            <a href="/dashboard/mlcluster/"><Button>Get Started</Button></a>
+            <p className="text-xs text-muted-foreground">Publish Your ML/AI Project Here</p>
+            <a href="/dashboard/projects/"><Button>Get Started</Button></a>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">MLHUB</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
+                      </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Machine Learing Hub</div>
+            <div className="text-2xl font-bold">Datasets</div>
             <p className="text-xs text-muted-foreground">Upload, Publish, Collaborate Start Your Machine Learing Project Here</p>
-          <a href="/dashboard/mlhub/"><Button>Get Started</Button></a>
+          <a href="/dashboard/datasets/"><Button>Get Started</Button></a>
           </CardContent>
         </Card>
       </div>

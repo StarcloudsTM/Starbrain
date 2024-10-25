@@ -21,15 +21,16 @@ import {
 import { Label } from "@/components/ui/label"
 
 interface Project {
-  id: string
+  _id: string
   name: string
   description: string
   url: string
+  userId: string
   createdAt: string
   updatedAt: string
 }
 
-export default function PublishPage() {
+export default function ProjectsPage() {
   const { user, isLoaded } = useUser()
   const [projects, setProjects] = useState<Project[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -44,10 +45,8 @@ export default function PublishPage() {
   const [projectUrl, setProjectUrl] = useState('')
 
   useEffect(() => {
-    if (isLoaded && user) {
-      fetchProjects()
-    }
-  }, [isLoaded, user])
+    fetchProjects()
+  }, [])
 
   const fetchProjects = async () => {
     try {
@@ -84,12 +83,13 @@ export default function PublishPage() {
         }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Failed to publish project')
+        throw new Error(data.message || 'Failed to publish project')
       }
 
-      const newProject = await response.json()
-      setProjects([newProject, ...projects])
+      setProjects([data, ...projects])
       toast({
         title: "Success",
         description: "Project published successfully!",
@@ -111,7 +111,7 @@ export default function PublishPage() {
     if (!editingProject) return
 
     try {
-      const response = await fetch(`/api/projects/${editingProject.id}`, {
+      const response = await fetch(`/api/projects/${editingProject._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -123,12 +123,13 @@ export default function PublishPage() {
         }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Failed to update project')
+        throw new Error(data.message || 'Failed to update project')
       }
 
-      const updatedProject = await response.json()
-      setProjects(projects.map(p => p.id === updatedProject.id ? updatedProject : p))
+      setProjects(projects.map(p => p._id === data._id ? data : p))
       toast({
         title: "Success",
         description: "Project updated successfully!",
@@ -154,10 +155,11 @@ export default function PublishPage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to delete project')
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Failed to delete project')
       }
 
-      setProjects(projects.filter(p => p.id !== id))
+      setProjects(projects.filter(p => p._id !== id))
       toast({
         title: "Success",
         description: "Project deleted successfully!",
@@ -179,86 +181,75 @@ export default function PublishPage() {
     setEditingProject(null)
   }
 
-  const validateUrl = (url: string) => {
-    const supportedDomains = ['github.com', 'bucketlist.com', 'deepnote.com']
-    try {
-      const parsedUrl = new URL(url)
-      return supportedDomains.some(domain => parsedUrl.hostname.includes(domain)) ||
-             parsedUrl.hostname.includes('ai') ||
-             parsedUrl.hostname.includes('ml') ||
-             parsedUrl.hostname.includes('ds')
-    } catch {
-      return false
-    }
-  }
-
-  if (!isLoaded || !user) {
+  if (!isLoaded) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>
   }
 
   return (
     <div className="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Published Projects</h1>
-        <Dialog open={isPublishDialogOpen} onOpenChange={setIsPublishDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> Publish New Project
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Publish New Project</DialogTitle>
-              <DialogDescription>
-                Add details about your project to publish it on Starbrains.
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handlePublish}>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)}
-                    className="col-span-3"
-                    required
-                  />
+        <h1 className="text-3xl font-bold">Projects</h1>
+        {user && (
+          <Dialog open={isPublishDialogOpen} onOpenChange={setIsPublishDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" /> Publish New Project
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Publish New Project</DialogTitle>
+                <DialogDescription>
+                  Add details about your project to publish it on Starbrains.
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handlePublish}>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      value={projectName}
+                      onChange={(e) => setProjectName(e.target.value)}
+                      className="col-span-3"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="description" className="text-right">
+                      Description
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={projectDescription}
+                      onChange={(e) => setProjectDescription(e.target.value)}
+                      className="col-span-3"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="url" className="text-right">
+                      URL
+                    </Label>
+                    <Input
+                      id="url"
+                      type="url"
+                      value={projectUrl}
+                      onChange={(e) => setProjectUrl(e.target.value)}
+                      className="col-span-3"
+                      required
+                    />
+                  </div>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="description" className="text-right">
-                    Description
-                  </Label>
-                  <Textarea
-                    id="description"
-                    value={projectDescription}
-                    onChange={(e) => setProjectDescription(e.target.value)}
-                    className="col-span-3"
-                    required
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="url" className="text-right">
-                    URL
-                  </Label>
-                  <Input
-                    id="url"
-                    type="url"
-                    value={projectUrl}
-                    onChange={(e) => setProjectUrl(e.target.value)}
-                    className="col-span-3"
-                    required
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit" disabled={!validateUrl(projectUrl)}>Publish Project</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <DialogFooter>
+                  <Button type="submit">Publish Project</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
       {error && (
         <Alert variant="destructive" className="mb-6">
@@ -267,19 +258,23 @@ export default function PublishPage() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-      {projects.length === 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">Loading projects...</div>
+      ) : projects.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center h-64">
-            <p className="text-xl font-semibold mb-4">You haven't published any projects yet</p>
-            <Button onClick={() => setIsPublishDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" /> Publish Your First Project
-            </Button>
+            <p className="text-xl font-semibold mb-4">No projects available</p>
+            {user && (
+              <Button onClick={() => setIsPublishDialogOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" /> Publish Your First Project
+              </Button>
+            )}
           </CardContent>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <Card key={project.id}>
+            <Card key={project._id}>
               <CardHeader>
                 <CardTitle>{project.name}</CardTitle>
                 <CardDescription>{project.description}</CardDescription>
@@ -298,28 +293,31 @@ export default function PublishPage() {
                     <ExternalLink className="mr-2 h-4 w-4" /> View Project
                   </a>
                 </Button>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      setEditingProject(project)
-                      setProjectName(project.name)
-                      setProjectDescription(project.description)
-                      setProjectUrl(project.url)
-                      setIsEditDialogOpen(true)
-                    }}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleDelete(project.id)}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                </div>
+                {user && user.id === project.userId && (
+                
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        setEditingProject(project)
+                        setProjectName(project.name)
+                        setProjectDescription(project.description)
+                        setProjectUrl(project.url)
+                        setIsEditDialogOpen(true)
+                      }}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleDelete(project._id)}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
               </CardFooter>
             </Card>
           ))}
@@ -374,7 +372,7 @@ export default function PublishPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={!validateUrl(projectUrl)}>Update Project</Button>
+              <Button type="submit">Update Project</Button>
             </DialogFooter>
           </form>
         </DialogContent>

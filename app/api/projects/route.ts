@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { db } from '@/lib/db'
+import clientPromise from '@/lib/mongodb'
 
 export async function GET(req: NextRequest) {
-  const { userId } = auth()
-  if (!userId) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
-  }
-
   try {
-    const projects = await db.project.findMany({
-      where: { userId },
-      orderBy: { createdAt: 'desc' },
-    })
+    const client = await clientPromise
+    const db = client.db("starbrains")
+    const projects = await db.collection("projects").find({}).toArray()
     return NextResponse.json(projects)
   } catch (error) {
     console.error('Error fetching projects:', error)
@@ -33,35 +27,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 })
     }
 
-    if (!validateUrl(url)) {
-      return NextResponse.json({ message: 'Invalid URL' }, { status: 400 })
+    const client = await clientPromise
+    const db = client.db("starbrains")
+    
+    // Check if a project with the same name already exists
+    const existingProject = await db.collection("projects").findOne({ name })
+    if (existingProject) {
+      return NextResponse.json({ message: 'A project with this name already exists' }, { status: 400 })
     }
 
-    const project = await db.project.create({
-      data: {
-        name,
-        description,
-        url,
-        userId,
-      },
-    })
+    const userProjects = await db.collection("projects").find({ userId }).toArray()
+    if (userProjects.length >= 5) {
+      return NextResponse.json({ message: 'Maximum number of projects reached' }, { status: 400 })
+    }
 
-    return NextResponse.json(project, { status: 201 })
+    const newProject = {
+      name,
+      description,
+      url,
+      userId,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+
+    const result = await db.collection("projects").insertOne(newProject)
+    newProject._id = result.insertedId
+
+    return NextResponse.json(newProject, { status: 201 })
   } catch (error) {
     console.error('Error creating project:', error)
     return NextResponse.json({ message: 'Failed to create project' }, { status: 500 })
-  }
-}
-
-function validateUrl(url: string) {
-  const supportedDomains = ['github.com', 'bucketlist.com', 'deepnote.com']
-  try {
-    const parsedUrl = new URL(url)
-    return supportedDomains.some(domain => parsedUrl.hostname.includes(domain)) ||
-           parsedUrl.hostname.includes('ai') ||
-           parsedUrl.hostname.includes('ml') ||
-           parsedUrl.hostname.includes('ds')
-  } catch {
-    return false
   }
 }
