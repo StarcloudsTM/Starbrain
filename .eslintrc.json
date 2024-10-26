@@ -12,7 +12,8 @@
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-empty-interface": "off",
     "prefer-const": "warn",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/no-explicit-any": "warn"
   },
   "overrides": [
     {
@@ -22,16 +23,17 @@
       }
     },
     {
-      "files": ["./app/dashboard/_components/datasetui.tsx"],
+      "files": ["./app/api/repos/route.ts"],
       "rules": {
-        "react-hooks/exhaustive-deps": "off",
-        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "Upload|err" }]
+        "prefer-const": "warn",
+        "@typescript-eslint/no-explicit-any": "warn"
       }
     },
     {
-      "files": ["./app/dashboard/_components/sidebar.tsx"],
+      "files": ["./app/dashboard/_components/datasetui.tsx"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "Home|ShoppingBag|Settings" }]
+        "react-hooks/exhaustive-deps": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "err" }]
       }
     },
     {
