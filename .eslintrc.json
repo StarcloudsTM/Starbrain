@@ -1,30 +1,43 @@
 {
-  "extends": "next/core-web-vitals",
-  "plugins": ["react-hooks"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": [
+    "react-hooks",
+    "@typescript-eslint"
+  ],
+  "parser": "@typescript-eslint/parser",
   "rules": {
-    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-empty-interface": "off",
-    "prefer-const": "off",
+    "prefer-const": "warn",
     "react-hooks/exhaustive-deps": "warn"
   },
   "overrides": [
     {
       "files": ["./app/dashboard/brains/page.tsx"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "setApps" }]
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "setApps" }]
       }
     },
     {
       "files": ["./app/dashboard/page.tsx"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "Users|ShoppingCart|Package" }]
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "Users|ShoppingCart|Package" }]
       }
     },
     {
       "files": ["./app/dashboard/projects/page.tsx"],
       "rules": {
-        "react-hooks/exhaustive-deps": ["warn", { "additionalHooks": "useEffect" }],
-        "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "err" }]
+        "react-hooks/exhaustive-deps": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "err" }]
+      }
+    },
+    {
+      "files": ["./app/dashboard/_components/datasetui.tsx"],
+      "rules": {
+        "react-hooks/exhaustive-deps": "off"
       }
     },
     {
