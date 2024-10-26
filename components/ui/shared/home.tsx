@@ -21,18 +21,18 @@ export default function LandingPage() {
   const features = [
     {
       icon: Laptop,
-      title: "MLaaS Platform",
-      description: "Access powerful machine learning tools and services on-demand. Scale your ML projects effortlessly with our cloud-based infrastructure."
+      title: "Datasets",
+      description: "Access thousands of Datasets for your ML project, Download Train and publish your ML projects on our platform using Datasets ."
     },
     {
       icon: Terminal,
-      title: "BrainsPY CLI",
+      title: "BrainsPY",
       description: "Streamline your Python backend and ML projects with our intuitive command-line interface. Boost productivity and maintain consistency across your team."
     },
     {
       icon: Github,
-      title: "Code Management",
-      description: "Collaborate and manage your ML projects with our GitHub-like platform, tailored for data scientists. Version control, code review, and seamless deployment in one place."
+      title: "Projects",
+      description: "Publish your AI/ML projects on our platform, Create Publish and Colab with others."
     }
   ]
 
@@ -107,7 +107,7 @@ export default function LandingPage() {
                   Empower Your ML Workflow with <span className="text-primary">Starbrains</span>
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                  Revolutionize your machine learning projects with our MLaaS platform, BrainsPY CLI, and collaborative code management tools.
+                  Revolutionize your machine learning projects with our Datasets platform, BrainsPY CLI, and collaborative.
                 </p>
               </motion.div>
               <motion.div

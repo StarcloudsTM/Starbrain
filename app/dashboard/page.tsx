@@ -14,7 +14,7 @@ export default function DashboardHome() {
           <CardContent>
             <div className="text-2xl font-bold">Python Code Snippet</div>
             <p className="text-xs text-muted-foreground">100+ Python Backend + Data Science Codes </p>
-            <a href="https://github.com/StarcloudsTM/brains"><Button>Get Started</Button></a>
+            <a href="/dashboard/brains"><Button>Get Started</Button></a>
           </CardContent>
           
         </Card>
