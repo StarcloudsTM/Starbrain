@@ -16,15 +16,22 @@
   },
   "overrides": [
     {
-      "files": ["./app/dashboard/brains/page.tsx"],
+      "files": ["./app/api/user-deletion/route.ts"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "setApps" }]
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "req" }]
       }
     },
     {
-      "files": ["./app/dashboard/page.tsx"],
+      "files": ["./app/dashboard/_components/datasetui.tsx"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "Users|ShoppingCart|Package" }]
+        "react-hooks/exhaustive-deps": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "Upload|err" }]
+      }
+    },
+    {
+      "files": ["./app/dashboard/_components/sidebar.tsx"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "Home|ShoppingBag|Settings" }]
       }
     },
     {
@@ -35,15 +42,21 @@
       }
     },
     {
-      "files": ["./app/dashboard/_components/datasetui.tsx"],
-      "rules": {
-        "react-hooks/exhaustive-deps": "off"
-      }
-    },
-    {
       "files": ["./components/ui/textarea.tsx"],
       "rules": {
         "@typescript-eslint/no-empty-interface": "off"
+      }
+    },
+    {
+      "files": ["./app/dashboard/brains/page.tsx"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "setApps" }]
+      }
+    },
+    {
+      "files": ["./app/dashboard/page.tsx"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "Users|ShoppingCart|Package" }]
       }
     },
     {
